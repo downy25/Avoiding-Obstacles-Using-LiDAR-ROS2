@@ -55,10 +55,10 @@ private:
         RCLCPP_INFO(this->get_logger(), "angle_range, %f, %f", RAD2DEG(scan->angle_min), RAD2DEG(scan->angle_max));*/
 
         
-        bool flag_R = false, flag_L = false; //ÀÏÁ¤°Å¸®¾È¿¡ ¹°Ã¼°¡ µé¾î¿Ô´ÂÁö ÆÇ´ÜÇÏ´Â flag
+        bool flag_R = false, flag_L = false; //ì¼ì •ê±°ë¦¬ì•ˆì— ë¬¼ì²´ê°€ ë“¤ì–´ì™”ëŠ”ì§€ íŒë‹¨í•˜ëŠ” flag
 
-        vector <float> distance_R, angle_R, distance_L, angle_L; //ÀÏÁ¤°Å¸®¿¡ µé¾î¿Â ¹°Ã¼ÀÇ °Å¸®°ª, °¢µµ ÀúÀå
-        vector <Point> distance_pts_R, distance_pts_L;  //ÀÏÁ¤°Å¸®¿¡ µé¾î¿Â ¹°Ã¼ÀÇ ÁÂÇ¥°ª
+        vector <float> distance_R, angle_R, distance_L, angle_L; //ì¼ì •ê±°ë¦¬ì— ë“¤ì–´ì˜¨ ë¬¼ì²´ì˜ ê±°ë¦¬ê°’, ê°ë„ ì €ì¥
+        vector <Point> distance_pts_R, distance_pts_L;  //ì¼ì •ê±°ë¦¬ì— ë“¤ì–´ì˜¨ ë¬¼ì²´ì˜ ì¢Œí‘œê°’
 
         cvtColor(lidar, lidar, COLOR_GRAY2BGR);
         for (int i = 0; i < count; i++) {
@@ -120,13 +120,13 @@ private:
         }
 
         float range = 0.f, angle = 0.f;
-        if (flag_L&flag_R) {
+        if (flag_L&&flag_R) {
             arrowedLine(lidar, Point(lidar.cols / 2, lidar.rows / 2), distance_pts_L[min_index_L], Scalar(0, 255, 0));
             arrowedLine(lidar, Point(lidar.cols / 2, lidar.rows / 2), distance_pts_R[min_index_R], Scalar(255, 0, 0));
-            cout << "ROI ¿ŞÂÊ"<< DISTANCE <<"m¹İ°æ¿¡ µé¾î¿À´Â °´Ã¼ÀÇ °¹¼ö : " << distance_L.size() << '\t' << "ÃÖ¼Ò°Å¸® : " 
-                << min_distance_L << '\t' << "°¢µµ : " << angle_L[min_index_L] << '\t' << endl;
-            cout << "ROI ¿À¸¥ÂÊ" << DISTANCE << "m¹İ°æ¿¡ µé¾î¿À´Â °´Ã¼ÀÇ °¹¼ö : " << distance_R.size() << '\t' 
-                << "ÃÖ¼Ò°Å¸® : " << min_distance_R << '\t' << "°¢µµ : " << angle_R[min_index_R] << '\t' << endl;
+            cout << "ROI ì™¼ìª½"<< DISTANCE <<"më°˜ê²½ì— ë“¤ì–´ì˜¤ëŠ” ê°ì²´ì˜ ê°¯ìˆ˜ : " << distance_L.size() << '\t' << "ìµœì†Œê±°ë¦¬ : " 
+                << min_distance_L << '\t' << "ê°ë„ : " << angle_L[min_index_L] << '\t' << endl;
+            cout << "ROI ì˜¤ë¥¸ìª½" << DISTANCE << "më°˜ê²½ì— ë“¤ì–´ì˜¤ëŠ” ê°ì²´ì˜ ê°¯ìˆ˜ : " << distance_R.size() << '\t' 
+                << "ìµœì†Œê±°ë¦¬ : " << min_distance_R << '\t' << "ê°ë„ : " << angle_R[min_index_R] << '\t' << endl;
             angle = angle_R[min_index_R] + angle_L[min_index_L];
             if (angle != 0) {
                 error = ((DISTANCE * 100 - distance_pts_L[min_index_L].x) - (distance_pts_R[min_index_R].x - 
@@ -136,22 +136,22 @@ private:
                 error = (lidar.cols / 2 + 40) - distance_pts_R[min_index_R].x;
             }
         }
-        else if (flag_R & !flag_L) {
+        else if (flag_R && !flag_L) {
             if (angle_R[min_index_R] != 0) {
                 arrowedLine(lidar, Point(lidar.cols / 2, lidar.rows / 2), distance_pts_R[min_index_R], Scalar(255, 0, 0));
             }
             arrowedLine(lidar, Point(lidar.cols / 2, lidar.rows / 2),
                 Point(lidar.cols / 2 - DISTANCE*100, lidar.rows / 2), Scalar(255, 0, 255));
-            cout << "ROI ¿À¸¥ÂÊ" << DISTANCE << "m¹İ°æ¿¡ µé¾î¿À´Â °´Ã¼ÀÇ °¹¼ö : " << distance_R.size() << '\t' 
-                << "ÃÖ¼Ò°Å¸® : " << min_distance_R << '\t' << "°¢µµ : " << angle_R[min_index_R] << '\t' << endl;
+            cout << "ROI ì˜¤ë¥¸ìª½" << DISTANCE << "më°˜ê²½ì— ë“¤ì–´ì˜¤ëŠ” ê°ì²´ì˜ ê°¯ìˆ˜ : " << distance_R.size() << '\t' 
+                << "ìµœì†Œê±°ë¦¬ : " << min_distance_R << '\t' << "ê°ë„ : " << angle_R[min_index_R] << '\t' << endl;
             error = (lidar.cols / 2 + DISTANCE * 100) - distance_pts_R[min_index_R].x;
         }
-        else if (!flag_R & flag_L) {
+        else if (!flag_R && flag_L) {
             arrowedLine(lidar, Point(lidar.cols / 2, lidar.rows / 2), distance_pts_L[min_index_L], Scalar(0, 255, 0));
             arrowedLine(lidar, Point(lidar.cols / 2, lidar.rows / 2),
                 Point(lidar.cols / 2 + (DISTANCE ) * 100, lidar.rows / 2), Scalar(153, 0, 0));
-            cout << "ROI ¿ŞÂÊ" << DISTANCE << "m¹İ°æ¿¡ µé¾î¿À´Â °´Ã¼ÀÇ °¹¼ö : " << distance_L.size() << '\t' << "ÃÖ¼Ò°Å¸® : " 
-                << min_distance_L << '\t' << "°¢µµ : " << angle_L[min_index_L] << '\t' << endl;
+            cout << "ROI ì™¼ìª½" << DISTANCE << "më°˜ê²½ì— ë“¤ì–´ì˜¤ëŠ” ê°ì²´ì˜ ê°¯ìˆ˜ : " << distance_L.size() << '\t' << "ìµœì†Œê±°ë¦¬ : " 
+                << min_distance_L << '\t' << "ê°ë„ : " << angle_L[min_index_L] << '\t' << endl;
             error = DISTANCE * 100 - distance_pts_L[min_index_L].x;
 
         }
@@ -163,13 +163,13 @@ private:
             error = 0.f;
         }
         if (error > 0) {
-            cout << "ÇöÁ¦ ÁÂÈ¸ÀüÁß error: " << error/2.f << endl;
+            cout << "í˜„ì œ ì¢ŒíšŒì „ì¤‘ error: " << error/2.f << endl;
         }
         else if (error < 0) {
-            cout << "ÇöÁ¦ ¿ìÈ¸ÀüÁß error: " << error/2.f << endl;
+            cout << "í˜„ì œ ìš°íšŒì „ì¤‘ error: " << error/2.f << endl;
         }
         else {
-            cout << "ÇöÁ¦ Á÷ÁøÁß error: " << error/2.f << endl;
+            cout << "í˜„ì œ ì§ì§„ì¤‘ error: " << error/2.f << endl;
         }
 
         imshow("lidar", lidar);
