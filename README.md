@@ -8,3 +8,6 @@
 
 2. 영상
 https://youtu.be/F8LGN2WI3NI
+
+3.알고리즘 블록도
+![장애물 피하기 알고리즘 블록도](https://github.com/downy25/Avoiding-Obstacles-Using-LiDAR/assets/112371402/b5efd252-ff73-4610-b9ec-38ba4c683f47)
