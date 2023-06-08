@@ -1,6 +1,7 @@
 # Avoiding-Obstacles-Using-LiDAR
 
 1. 구현 방식
+
 (1) ROI영역을 전방 기준으로 나눔
 
 (2) 1.4m 영역에 들어오는 객체를 찾음
